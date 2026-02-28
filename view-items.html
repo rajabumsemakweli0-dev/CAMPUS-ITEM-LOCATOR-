@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View All Items</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/student/dashboard.html">
+        <img src="/assets/logo.png" alt="Logo" style="height: 40px;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/student/dashboard.html">Dashboard</a></li>
+          <li class="nav-item"><a class="nav-link text-danger" href="#" id="logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h2 class="mb-4">All Items (Lost & Found)</h2>
+    <div class="row g-4" id="itemsList"></div>
+  </div>
+
+  <script>
+    document.getElementById('logout').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = '/base.html';
+    });
+
+    async function loadItems() {
+      const token = localStorage.getItem('token');
+      if (!token) window.location.href = '/base.html';
+
+      try {
+        const res = await fetch('/api/items', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const items = await res.json();
+
+        const container = document.getElementById('itemsList');
+        container.innerHTML = '';
+
+        items.forEach(item => {
+          container.innerHTML += `
+            <div class="col-md-6 col-lg-4">
+              <div class="card shadow-sm">
+                ${item.image ? `<img src="${item.image}" class="card-img-top" alt="${item.title}" style="height:180px; object-fit:cover;">` : ''}
+                <div class="card-body">
+                  <h5 class="card-title">${item.title}</h5>
+                  <p class="card-text text-muted">${item.description || 'No description'}</p>
+                  <p><strong>Location:</strong> ${item.location}</p>
+                  <p><strong>Date:</strong> ${item.date_lost}</p>
+                  <p><strong>Status:</strong> <span class="badge bg-${item.status === 'found' ? 'success' : 'danger'}">${item.status.toUpperCase()}</span></p>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadItems();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "Campus Item Locator",
+  "short_name": "CIL",
+  "start_url": "/base.html",
+  "display": "standalone",
+  "background_color": "#4e54c8",
+  "theme_color": "#8f94fb",
+  "icons": [
+    {
+      "src": "/assets/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
